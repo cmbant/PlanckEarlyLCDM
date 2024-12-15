@@ -1,0 +1,492 @@
+theory:
+  spline_lensing.PlanckSplineLensing:
+    nodes:
+    - 1.9459101490553132
+    - 3.784189633918261
+    - 4.8283137373023015
+    - 6.396929655216146
+    - 7.3777589082278725
+    params:
+      p0:
+        prior:
+          min: -22
+          max: -14
+        proposal: 0.1
+      p1:
+        prior:
+          min: -22
+          max: -14
+        proposal: 0.1
+      p2:
+        prior:
+          min: -22
+          max: -14
+        proposal: 0.1
+      p3:
+        prior:
+          min: -22
+          max: -14
+        proposal: 0.1
+      p4:
+        prior:
+          min: -22
+          max: -14
+        proposal: 0.1
+      Aisw:
+        prior:
+          min: 0
+          max: 3
+        proposal: 0.02
+        ref: 0.1
+    speed: -1
+    stop_at_error: false
+    version: null
+    input_params:
+    - p0
+    - p1
+    - p2
+    - p3
+    - p4
+    - Aisw
+    output_params: []
+  spline_lensing.CambSpline:
+    version: 1.3.6
+    path: null
+    speed: 0.3
+    stop_at_error: false
+    extra_args:
+      no_isw: true
+      halofit_version: mead
+      bbn_predictor: PArthENoPE_880.2_standard.dat
+      lens_potential_accuracy: 0
+      theta_H0_range:
+      - 40
+      - 100
+    ignore_obsolete: false
+    use_renames: false
+    external_primordial_pk: false
+    renames:
+      omegabh2: ombh2
+      omegach2: omch2
+      omegal: omega_de
+      omegak: omk
+      yhe: YHe
+      yheused: YHe
+      YpBBN: Y_p
+    input_params:
+    - As
+    - ns
+    - cosmomc_theta
+    - ombh2
+    - omch2
+    - tau
+    - mnu
+    output_params:
+    - H0
+    - omegam
+    - thetastar
+    - omega_de
+    - YHe
+    - Y_p
+    - sigma8
+    - age
+    - rdrag
+    - DH
+likelihood:
+  planck_PR4_lensing.planckpr4lensing.PlanckPR4Lensing:
+    path: null
+    dataset_file: data_pr4/pp_consext8_npipe_smicaed_TiPi_jTP_pre30T_kfilt_rdn0cov_PS1.dataset
+    aliases:
+    - lensing
+    speed: 50
+    type: CMB
+    map_separator: x
+    stop_at_error: false
+    version: null
+    input_params:
+    - A_planck
+    output_params: []
+  planck_2020_highl_CamSpec2021.TTTEEE:
+    path: null
+    dataset_file: CamSpec2021_NPIPE/CamSpec_NPIPE_12_5_cl.dataset
+    dataset_params:
+      use_cl: 143x143 217x217 143x217 TE EE
+      use_range:
+        TE: 30-2000
+    aliases:
+    - CamSpec2021NP_TTTEEE
+    speed: 10
+    type: CMB
+    stop_at_error: false
+    version: null
+    input_params:
+    - A_planck
+    - use_fg_residual_model
+    - cal0
+    - cal2
+    - amp_100
+    - amp_143
+    - amp_217
+    - amp_143x217
+    - n_100
+    - n_143
+    - n_217
+    - n_143x217
+    - calTE
+    - calEE
+    output_params: []
+  planck_2018_lowl.EE:
+    path: null
+    clik_file: baseline/plc_3.0/low_l/simall/simall_100x143_offlike5_EE_Aplanck_B.clik
+    product_id: '151902'
+    aliases:
+    - lowE
+    speed: 4000
+    type: CMB
+    stop_at_error: false
+    version: null
+    input_params:
+    - A_planck
+    output_params: []
+params:
+  logA:
+    prior:
+      min: 1.61
+      max: 3.91
+    ref:
+      dist: norm
+      loc: 3.05
+      scale: 0.01
+    proposal: 0.005
+    latex: \log(10^{10} A_\mathrm{s})
+    drop: true
+  As:
+    value: 'lambda logA: 1e-10*np.exp(logA)'
+    latex: A_\mathrm{s}
+    derived: true
+  ns:
+    prior:
+      dist: norm
+      loc: 0.96
+      scale: 0.02
+    ref:
+      dist: norm
+      loc: 0.965
+      scale: 0.02
+    proposal: 0.002
+    latex: n_\mathrm{s}
+  theta_MC_100:
+    prior:
+      min: 0.5
+      max: 10
+    ref:
+      dist: norm
+      loc: 1.04109
+      scale: 0.002
+    proposal: 0.001
+    latex: 100\theta_\mathrm{MC}
+    drop: true
+    renames: theta
+  cosmomc_theta:
+    value: 'lambda theta_MC_100: 1.e-2*theta_MC_100'
+    derived: false
+  H0:
+    latex: H_0
+    min: 40
+    max: 100
+    derived: true
+  ombh2:
+    prior:
+      dist: norm
+      loc: 0.0222
+      scale: 0.0005
+    ref:
+      dist: norm
+      loc: 0.0222
+      scale: 0.0005
+    proposal: 0.0004
+    latex: \Omega_\mathrm{b} h^2
+    renames:
+    - omegabh2
+  omch2:
+    prior:
+      min: 0.001
+      max: 0.99
+    ref:
+      dist: norm
+      loc: 0.12
+      scale: 0.003
+    proposal: 0.002
+    latex: \Omega_\mathrm{c} h^2
+    renames:
+    - omegach2
+  omegam:
+    latex: \Omega_\mathrm{m}
+    derived: true
+  omegamh2:
+    derived: 'lambda omegam, H0: omegam*(H0/100)**2'
+    latex: \Omega_\mathrm{m} h^2
+  tau:
+    latex: \tau_\mathrm{reio}
+    prior:
+      max: 0.8
+      min: 0.01
+    proposal: 0.003
+    ref:
+      dist: norm
+      loc: 0.055
+      scale: 0.006
+  thetastar:
+    latex: \theta_*
+    derived: true
+  clamp:
+    derived: 'lambda As,tau: As*np.exp(-2*tau)*1e9'
+    latex: 10^9 A_\mathrm{s} e^{-2\tau}
+  mnu:
+    value: 0.06
+  omega_de:
+    latex: \Omega_\Lambda
+    derived: true
+    renames:
+    - omegal
+  YHe:
+    latex: Y_\mathrm{P}
+    derived: true
+    renames:
+    - yhe
+    - yheused
+  Y_p:
+    latex: Y_P^\mathrm{BBN}
+    derived: true
+    renames:
+    - YpBBN
+  DHBBN:
+    derived: 'lambda DH: 10**5*DH'
+    latex: 10^5 \mathrm{D}/\mathrm{H}
+  sigma8:
+    latex: \sigma_8
+    derived: true
+  s8h5:
+    derived: 'lambda sigma8, H0: sigma8*(H0*1e-2)**(-0.5)'
+    latex: \sigma_8/h^{0.5}
+  s8omegamp5:
+    derived: 'lambda sigma8, omegam: sigma8*omegam**0.5'
+    latex: \sigma_8 \Omega_\mathrm{m}^{0.5}
+  s8omegamp25:
+    derived: 'lambda sigma8, omegam: sigma8*omegam**0.25'
+    latex: \sigma_8 \Omega_\mathrm{m}^{0.25}
+  age:
+    latex: '{\rm{Age}}/\mathrm{Gyr}'
+    derived: true
+  rdrag:
+    latex: r_\mathrm{drag}
+    derived: true
+  p0:
+    prior:
+      min: -22
+      max: -14
+    proposal: 0.02
+    ref: -16.23
+  p1:
+    prior:
+      min: -22
+      max: -14
+    proposal: 0.02
+    ref: -15.844
+  p2:
+    prior:
+      min: -22
+      max: -14
+    proposal: 0.02
+    ref: -16.298
+  p3:
+    prior:
+      min: -22
+      max: -14
+    proposal: 0.02
+    ref: -18.10294
+  p4:
+    prior:
+      min: -21
+      max: -19
+    proposal: 0.02
+    ref: -19.6
+  Aisw:
+    prior:
+      min: 0
+      max: 3
+    proposal: 0.02
+    ref: 0.1
+  A_planck:
+    prior:
+      dist: norm
+      loc: 1
+      scale: 0.0025
+    ref:
+      dist: norm
+      loc: 1
+      scale: 0.002
+    proposal: 0.0005
+    latex: y_\mathrm{cal}
+    renames: calPlanck
+  use_fg_residual_model:
+    value: 0
+  cal0:
+    value: 1
+  cal2:
+    value: 1
+  amp_100:
+    value: 0
+  amp_143:
+    prior:
+      dist: uniform
+      min: 0
+      max: 50
+    ref:
+      dist: norm
+      loc: 10
+      scale: 1
+    latex: A^{\rm power}_{143}
+    proposal: 1
+  amp_217:
+    prior:
+      dist: uniform
+      min: 0
+      max: 50
+    ref:
+      dist: norm
+      loc: 20
+      scale: 1
+    latex: A^{\rm power}_{217}
+    proposal: 1
+  amp_143x217:
+    prior:
+      dist: uniform
+      min: 0
+      max: 50
+    ref:
+      dist: norm
+      loc: 10
+      scale: 1
+    latex: A^{\rm power}_{143\times217}
+    proposal: 1
+  n_100:
+    value: 1
+  n_143:
+    prior:
+      dist: uniform
+      min: 0
+      max: 5
+    ref:
+      dist: norm
+      loc: 1
+      scale: 0.2
+    latex: \gamma^{\rm power}_{143}
+    proposal: 0.2
+  n_217:
+    prior:
+      dist: uniform
+      min: 0
+      max: 5
+    ref:
+      dist: norm
+      loc: 1
+      scale: 0.2
+    latex: \gamma^{\rm power}_{143}
+    proposal: 0.2
+  n_143x217:
+    prior:
+      dist: uniform
+      min: 0
+      max: 5
+    ref:
+      dist: norm
+      loc: 1
+      scale: 0.2
+    latex: \gamma^{\rm power}_{143}
+    proposal: 0.2
+  calTE:
+    prior:
+      dist: norm
+      loc: 1
+      scale: 0.01
+    ref:
+      dist: norm
+      loc: 1
+      scale: 0.01
+    proposal: 0.01
+    latex: c_{TE}
+  calEE:
+    prior:
+      dist: norm
+      loc: 1
+      scale: 0.01
+    ref:
+      dist: norm
+      loc: 1
+      scale: 0.01
+    proposal: 0.01
+    latex: c_{EE}
+  chi2__CMB:
+    latex: \chi^2_\mathrm{CMB}
+    derived: true
+sampler:
+  mcmc:
+    burn_in: 0
+    max_tries: .inf
+    covmat: spline_planck_PR4_TTTEEE_lowE_lensing.covmat
+    covmat_params: null
+    proposal_scale: 1.9
+    output_every: 60s
+    learn_every: 40d
+    learn_proposal: true
+    learn_proposal_Rminus1_max: 2.0
+    learn_proposal_Rminus1_max_early: 30.0
+    learn_proposal_Rminus1_min: 0.0
+    max_samples: .inf
+    Rminus1_stop: 0.01
+    Rminus1_cl_stop: 0.005
+    Rminus1_cl_level: 0.95
+    Rminus1_single_split: 4
+    measure_speeds: true
+    oversample_power: 0.4
+    oversample_thin: true
+    drag: true
+    blocking:
+    - - 1
+      - - theta_MC_100
+        - ombh2
+        - omch2
+        - tau
+    - - 4
+      - - p0
+        - p1
+        - p2
+        - p3
+        - p4
+        - Aisw
+    - - 4
+      - - logA
+        - ns
+    - - 4
+      - - A_planck
+    - - 4
+      - - amp_143
+        - amp_217
+        - amp_143x217
+        - n_143
+        - n_217
+        - n_143x217
+        - calTE
+        - calEE
+    callback_function: null
+    callback_every: null
+    seed: null
+    check_every: null
+    oversample: null
+    drag_limits: null
+    fallback_covmat_scale: 4
+    version: 3.2.1
+output: spline_planck_PR4_TTTEEE_lowE_lensing_ISW
+stop_at_error: false
+version: 3.2.1
