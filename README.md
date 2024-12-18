@@ -29,6 +29,19 @@ Chains can be analysed or visualized using [GetDist](https://getdist.readthedocs
 
 The .covmat file has the parameter covariance for Gaussian approximations.
 
+To use a simple Gaussian approximation to the likelihood in Cobaya you can use [gaussian_mixture](https://cobaya.readthedocs.io/en/latest/likelihood_gaussian_mixture.html), e.g. for 3-parameters
+
+```
+likelihood:
+   gaussian_mixture:
+     means: [[1.04103e-2, 0.02223, 0.1192]]
+     covs: [[6.8552146e-16, 1.4486860e-12, -1.4105674e-11],
+            [1.4486860e-12, 2.1344167e-08, -1.1534501e-07],
+            [-1.4105674e-11, -1.1534501e-07, 1.6977630e-06]]
+     input_params: ['thetastar', 'ombh2', 'omch2']
+     output_params: []
+```
+
 
 ## Citation
 
