@@ -41,7 +41,7 @@ likelihood:
      input_params: ['thetastar', 'ombh2', 'omch2']
      output_params: []
 ```
-
+Note that you must have thetastar, ombh2 and omch2 defined in the same order in your input sampling yaml.
 
 ## Citation
 
