@@ -9,6 +9,7 @@ The early ΛCDM parameter chains allow for robust constraints on the early unive
 ## Data
 
 The chains were generated using [Cobaya](https://github.com/CobayaSampler/cobaya) and use:
+
 - Planck PR4 CamSpec likelihood
 - Temperature and polarization data (TTTEEE) at ℓ ≥ 30
 - Low-ℓ EE polarization data
@@ -17,6 +18,7 @@ The chains were generated using [Cobaya](https://github.com/CobayaSampler/cobaya
 ## Methodology
 
 Parameters are constrained using an approach that:
+
 - Models CMB lensing empirically using a spline fit to the lensing power spectrum
 - Excludes low-ℓ temperature data (ℓ < 30) to avoid ISW sensitivity
 - Models residual ISW at ℓ ≥ 30 with a template
@@ -35,17 +37,31 @@ To use a simple Gaussian approximation to the likelihood in Cobaya you can use [
 likelihood:
    gaussian_mixture:
      means: [[1.04103e-2, 0.02223, 0.1192]]
-     covs: [[6.8552146e-16, 1.4486860e-12, -1.4105674e-11],
-            [1.4486860e-12, 2.1344167e-08, -1.1534501e-07],
-            [-1.4105674e-11, -1.1534501e-07, 1.6977630e-06]]
+     covs: [[ 6.62099420e-12,  1.24442058e-10, -1.31731741e-09],
+            [ 1.24442058e-10,  2.13441666e-08, -1.15345007e-07],
+            [-1.31731741e-09, -1.15345007e-07,  1.69776300e-06]]
      input_params: ['thetastar', 'ombh2', 'omch2']
      output_params: []
 ```
-Note that you must have thetastar, ombh2 and omch2 defined in the same order in your input sampling yaml.
+
+You can calculate means and covariances from the the chains using getdist, e.g.
+
+```
+from getdist import loadMCSamples
+samples = loadMCSamples('./spline_planck_PR4_TTTEEE_lowE_lensing_ISW',
+                        settings={'ignore_rows': 0.3})
+samples.addDerived(samples['thetastar']/100, 'thetaunscaled')
+
+print(samples.mean(['thetaunscaled','ombh2','omch2']))
+print(samples.cov(['thetaunscaled','ombh2','omch2']))
+```
+
+Note that theta values stored in the chain are scaled by 100.
 
 ## Citation
 
 If you use these chains or the associated analyses in your work, please cite:
+
 ```
 @article{Lemos:2023xhs,
     author = "Lemos, Pablo and Lewis, Antony",
@@ -62,6 +78,3 @@ If you use these chains or the associated analyses in your work, please cite:
 }ar={2023}
 }
 ```
-
-
- 
