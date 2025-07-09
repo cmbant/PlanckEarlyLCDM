@@ -75,6 +75,6 @@ If you use these chains or the associated analyses in your work, please cite:
     number = "10",
     pages = "103505",
     year = "2023"
-}ar={2023}
+}
 }
 ```
