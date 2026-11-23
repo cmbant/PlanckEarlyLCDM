@@ -15,6 +15,8 @@ The chains were generated using [Cobaya](https://github.com/CobayaSampler/cobaya
 - Low-ℓ EE polarization data
 - Planck PR4 lensing likelihood
 
+Note (2026): the chains also appear to accidentally include an ns and ombh2 Gaussian prior.
+
 ## Methodology
 
 Parameters are constrained using an approach that:
